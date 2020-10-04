@@ -15,3 +15,11 @@ swap:
     mov qword [rdi+rdx*8], rax    ; tab[j] <- tmpj
     ret
 
+choose_pivot:
+    ; <- tab (rdi): int array
+    ; <- lo  (rsi): int
+    ; <- hi  (rdx): int
+    ; -> int (eax)
+    mov rax, [rdi+rsi*8]    ; ret <- tab[lo]
+    ret
+
