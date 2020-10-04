@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate more_asserts;
+
 #[allow(dead_code)]
 mod qsort {
     mod internal {
@@ -77,4 +80,26 @@ fn test_multi_swap() {
     assert_eq!(tab, vec![0, 1, 2, 3, 4, 5, 6]);
 }
 
+#[cfg(test)]
+fn assert_partitioned(tab: &Vec<i64>, lo: usize, sm: usize, eq: usize, hi: usize, pv: i64) {
+    for i in lo..sm {
+        assert_lt!(tab[i], pv);
+    }
+    for i in sm..eq {
+        assert_eq!(tab[i], pv);
+    }
+    for i in eq..hi {
+        assert_gt!(tab[i], pv);
+    }
+}
+
+#[test]
+fn test_partition() {
+    let mut tab = vec![0, 4, 2, 8, 4, 6, 3, 9, 1, 7];
+    let lo = 0;
+    let mut sm = lo;
+    let mut eq = lo;
+    let hi = tab.len();
+    partition(&mut tab, lo, &mut sm, &mut eq, hi, 5);
+    assert_partitioned(&tab, lo, sm, eq, hi, 5);
 }
