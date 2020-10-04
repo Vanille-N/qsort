@@ -15,6 +15,7 @@ mod qsort {
                 hi: usize,
                 pv: i64,
             );
+            pub fn qsort_aux(tab: *mut i64, lo: usize, hi: usize);
         }
     }
     pub fn swap(tab: &mut Vec<i64>, i: usize, j: usize) {
@@ -44,6 +45,11 @@ mod qsort {
                 hi,
                 pv,
             );
+        }
+    }
+    pub fn qsort_aux(tab: &mut Vec<i64>, lo: usize, hi: usize) {
+        unsafe {
+            internal::qsort_aux(tab.as_mut_ptr() as *mut i64, lo, hi);
         }
     }
 }
@@ -115,4 +121,12 @@ fn test_partition() {
     let hi = tab.len();
     partition(&mut tab, lo, &mut sm, &mut eq, hi, 5);
     assert_partitioned(&tab, lo, sm, eq, hi, 5);
+}
+
+#[test]
+fn test_qsort_aux() {
+    let mut tab = vec![101, 105, 104, 5, 3, 9, 1, 7, 2, 5, 6, 7, 1, 2, -207, -203, -206];
+    qsort_aux(&mut tab, 3, 14);
+    println!("{:?}", tab);
+    panic!();
 }
