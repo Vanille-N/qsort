@@ -23,3 +23,53 @@ choose_pivot:
     mov rax, [rdi+rsi*8]    ; ret <- tab[lo]
     ret
 
+partition:
+    ; <- tab (rdi): int array
+    ; <- lo  (rsi): int
+    ; <- sm  (rdx): int*        (r11)
+    ; <- eq  (rcx): int*
+    ; <- hi   (r8): int
+    ; <- pv   (r9): int
+    ; == gt  (r10): int
+    mov r10, rsi                 ; gt <- lo
+    mov r11, [rdx]        ; save sm
+    push rdx
+    push rcx
+    mov rcx, [rcx]
+  .while:
+    cmp r10, r8                  ; gt <=> hi
+    jge .exit
+    mov rax, [rdi+r10*8]
+    cmp rax, r9                  ;     tab[gt] <=> pv
+    jl .case_sm
+    je .case_eq
+    jg .case_gt
+  .case_sm:                      ; --- when tab[gt] < pv
+    mov rsi, rcx                 ;     load eq
+    mov rdx, r10                 ;     load gt
+    call swap
+    mov rsi, r11                 ;     load sm
+    mov rdx, rcx                 ;     load eq
+    call swap
+    inc r10                      ;     gt++
+    inc rcx                      ;     eq++
+    inc r11                      ;     sm++
+    jmp .endif
+  .case_eq:                      ; --- when tab[gt] = pv
+    mov rsi, rcx                 ;     load eq
+    mov rdx, r10                 ;     load gt
+    call swap
+    inc r10                      ;     gt++
+    inc rcx                      ;     eq++
+    jmp .endif
+  .case_gt:                      ; --- when tab[gt] > pv
+    inc r10                      ;     gt++
+    jmp .endif
+  .endif:
+    jmp .while
+  .exit:
+    pop rax
+    mov [rax], rcx
+    pop rax
+    mov [rax], r11
+    ret
