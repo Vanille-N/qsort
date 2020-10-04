@@ -4,7 +4,7 @@ section .text
 global swap
 global choose_pivot
 global partition
-global qsort_aux
+global qsort
 
 swap:
     ; <- tab (rdi): int array
@@ -75,25 +75,27 @@ partition:
     mov [rax], r11
     ret
 
-qsort_aux:
+qsort:
     ; <- tab (rdi)
     ; <- lo  (rsi)
     ; <- hi  (rdx)
     cmp rsi, rdx        ; lo <=> hi
     je .end
-    push rsi            ; save lo
     push rdx            ; save hi
     call choose_pivot   ; (rax) <- pv
     push rsi            ; create local sm
     push rsi            ; create local eq
+    push rsi            ; save lo
     mov r8, rdx         ; load hi
-    lea rdx, [rsp+8]   ; load &sm
-    lea rcx, [rsp]    ; load &eq
+    lea rdx, [rsp+8]    ; load &sm
+    lea rcx, [rsp+16]   ; load &eq
     mov r9, rax         ; load pv
-    call partition
-    pop rbx
-    pop rbx
-    pop rbx
-    pop rbx
+    call partition      ; partition(tab, lo, &sm, &eq, hi, pv)
+    pop rsi             ; load lo
+    pop rdx             ; load sm
+    call qsort          ; qsort_aux(tab, lo, sm)
+    pop rsi             ; load eq
+    pop rdx             ; load hi
+    call qsort          ; qsort_aux(tab, eq, hi)
   .end:
     ret
