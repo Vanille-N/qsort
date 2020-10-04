@@ -67,4 +67,14 @@ fn test_swap_big() {
     }
 }
 
+#[test]
+fn test_multi_swap() {
+    let mut tab = vec![6, 5, 4, 3, 2, 1, 0];
+    swap(&mut tab, 0, 6);
+    swap(&mut tab, 1, 5);
+    swap(&mut tab, 2, 4);
+    swap(&mut tab, 3, 3);
+    assert_eq!(tab, vec![0, 1, 2, 3, 4, 5, 6]);
+}
+
 }
