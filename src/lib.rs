@@ -39,4 +39,32 @@ mod qsort {
     }
 }
 
+#[allow(unused_imports)]
+use qsort::*;
+
+#[test]
+fn test_swap() {
+    let mut tab = vec![0, 1, 5, 3, 4, 2, 6, 7];
+    swap(&mut tab, 2, 5);
+    assert_eq!(tab, vec![0, 1, 2, 3, 4, 5, 6, 7]);
+}
+
+#[test]
+fn test_swap_big() {
+    let mut tab = vec![
+        0 << 60,
+        1 << 60,
+        5 << 60,
+        3 << 60,
+        4 << 60,
+        2 << 60,
+        6 << 60,
+        7 << 60,
+    ];
+    swap(&mut tab, 2, 5);
+    for i in 0..tab.len() {
+        assert_eq!(tab[i], (i as i64) << 60);
+    }
+}
+
 }
