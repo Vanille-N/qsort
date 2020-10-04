@@ -1,3 +1,4 @@
+#[cfg(test)]
 #[macro_use]
 extern crate more_asserts;
 
@@ -15,21 +16,21 @@ mod qsort {
                 hi: usize,
                 pv: i64,
             );
-            pub fn qsort_aux(tab: *mut i64, lo: usize, hi: usize);
+            pub fn qsort(tab: *mut i64, lo: usize, hi: usize);
         }
     }
-    pub fn swap(tab: &mut Vec<i64>, i: usize, j: usize) {
+    pub fn swap(tab: &mut [i64], i: usize, j: usize) {
         unsafe {
             internal::swap(tab.as_mut_ptr() as *mut i64, i, j);
         }
     }
-    pub fn choose_pivot(tab: &Vec<i64>, lo: usize, hi: usize) -> i64 {
+    pub fn choose_pivot(tab: &[i64], lo: usize, hi: usize) -> i64 {
         unsafe {
             internal::choose_pivot(tab.as_ptr() as *const i64, lo, hi)
         }
     }
     pub fn partition(
-        tab: &mut Vec<i64>,
+        tab: &mut [i64],
         lo: usize,
         sm: &mut usize,
         eq: &mut usize,
@@ -47,10 +48,13 @@ mod qsort {
             );
         }
     }
-    pub fn qsort_aux(tab: &mut Vec<i64>, lo: usize, hi: usize) {
+    pub fn qsort_aux(tab: &mut [i64], lo: usize, hi: usize) {
         unsafe {
-            internal::qsort_aux(tab.as_mut_ptr() as *mut i64, lo, hi);
+            internal::qsort(tab.as_mut_ptr() as *mut i64, lo, hi);
         }
+    }
+    pub fn qsort(tab: &mut [i64]) {
+        qsort_aux(tab, 0, tab.len());
     }
 }
 
@@ -112,6 +116,13 @@ fn assert_partitioned(tab: &Vec<i64>, lo: usize, sm: usize, eq: usize, hi: usize
     }
 }
 
+#[cfg(test)]
+fn assert_sorted(tab: &[i64]) {
+    for i in 0..tab.len()-1 {
+        assert_le!(tab[i], tab[i+1]);
+    }
+}
+
 #[test]
 fn test_partition() {
     let mut tab = vec![0, 4, 2, 8, 4, 6, 3, 9, 1, 7];
@@ -127,6 +138,18 @@ fn test_partition() {
 fn test_qsort_aux() {
     let mut tab = vec![101, 105, 104, 5, 3, 9, 1, 7, 2, 5, 6, 7, 1, 2, -207, -203, -206];
     qsort_aux(&mut tab, 3, 14);
-    println!("{:?}", tab);
-    panic!();
+    assert_sorted(&tab[3..14]);
+}
+
+#[test]
+fn test_qsort() {
+    let mut tab1 = vec![1, 3, 8, 1, 7, 9, 3, 8, 5, 7, 1];
+    let mut tab2 = vec![1<<50, 6<<50, 4<<50, 7<<50, 2<<50, 8<<50, 3<<50, 9<<50, 1<<50, 4<<50];
+    let mut tab3 = vec![22, -116, 12, 45286921, -4444, 852, -6369, 981516];
+    qsort(&mut tab1);
+    qsort(&mut tab2);
+    qsort(&mut tab3);
+    assert_sorted(&tab1);
+    assert_sorted(&tab2);
+    assert_sorted(&tab3);
 }

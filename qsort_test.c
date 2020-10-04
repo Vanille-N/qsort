@@ -8,7 +8,7 @@
 extern void swap (i64 * tab, usize i, usize j);
 extern int choose_pivot (i64 * tab, usize i, usize j);
 extern void partition (i64 * tab, usize lo, usize * sm, usize * eq, usize hi, i64 pv);
-extern void qsort_aux (i64 * tab, usize lo, usize hi);
+extern void qsort (i64 * tab, usize lo, usize hi);
 
 void setUp(void) {
 }
@@ -74,20 +74,20 @@ void test_partition_4(void) {
     printf("[>] ("); for (usize i = eq; i < hi; i++) { printf("%ld ", tab[i]); } printf(")\n");
 }
 
-void test_qsort_aux(void) {
+void test_qsort(void) {
     i64 tab [] = { 101, 105, 104, 5, 3, 9, 1, 7, 2, 5, 6, 7, 1, 2, -207, -203, -206 };
-    qsort_aux(tab, 3, 14);
+    qsort(tab, 3, 14);
     for (usize i = 0; i < 17; i++) { printf("%ld ", tab[i]); } printf("\n");
 }
 
 int main(void) {
     UNITY_BEGIN();
-    // RUN_TEST(test_swap);
-    // RUN_TEST(test_choose_pivot);
-    // RUN_TEST(test_partition_1);
-    // RUN_TEST(test_partition_2);
-    // RUN_TEST(test_partition_3);
-    // RUN_TEST(test_partition_4);
-    RUN_TEST(test_qsort_aux);
+    RUN_TEST(test_swap);
+    RUN_TEST(test_choose_pivot);
+    RUN_TEST(test_partition_1);
+    RUN_TEST(test_partition_2);
+    RUN_TEST(test_partition_3);
+    RUN_TEST(test_partition_4);
+    RUN_TEST(test_qsort);
     return UNITY_END();
 }
