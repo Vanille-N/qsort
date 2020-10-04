@@ -6,6 +6,7 @@ mod qsort {
     mod internal {
         extern "C" {
             pub fn swap(tab: *mut i64, i: usize, j: usize);
+            pub fn choose_pivot(tab: *const i64, lo: usize, hi: usize) -> i64;
             pub fn partition(
                 tab: *mut i64,
                 lo: usize,
@@ -19,6 +20,11 @@ mod qsort {
     pub fn swap(tab: &mut Vec<i64>, i: usize, j: usize) {
         unsafe {
             internal::swap(tab.as_mut_ptr() as *mut i64, i, j);
+        }
+    }
+    pub fn choose_pivot(tab: &Vec<i64>, lo: usize, hi: usize) -> i64 {
+        unsafe {
+            internal::choose_pivot(tab.as_ptr() as *const i64, lo, hi)
         }
     }
     pub fn partition(
@@ -78,6 +84,13 @@ fn test_multi_swap() {
     swap(&mut tab, 2, 4);
     swap(&mut tab, 3, 3);
     assert_eq!(tab, vec![0, 1, 2, 3, 4, 5, 6]);
+}
+
+#[test]
+fn test_choose_pivot() {
+    let tab = vec![0, 1, 2, 3, 4, 5];
+    let pv = choose_pivot(&tab, 2, 4);
+    assert_eq!(pv, 2);
 }
 
 #[cfg(test)]
