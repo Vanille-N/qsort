@@ -25,9 +25,7 @@ mod qsort {
         }
     }
     pub fn choose_pivot(tab: &[i64], lo: usize, hi: usize) -> i64 {
-        unsafe {
-            internal::choose_pivot(tab.as_ptr() as *const i64, lo, hi)
-        }
+        unsafe { internal::choose_pivot(tab.as_ptr() as *const i64, lo, hi) }
     }
     pub fn partition(
         tab: &mut [i64],
@@ -118,8 +116,8 @@ fn assert_partitioned(tab: &Vec<i64>, lo: usize, sm: usize, eq: usize, hi: usize
 
 #[cfg(test)]
 fn assert_sorted(tab: &[i64]) {
-    for i in 0..tab.len()-1 {
-        assert_le!(tab[i], tab[i+1]);
+    for i in 0..tab.len() - 1 {
+        assert_le!(tab[i], tab[i + 1]);
     }
 }
 
@@ -136,7 +134,9 @@ fn test_partition() {
 
 #[test]
 fn test_qsort_aux() {
-    let mut tab = vec![101, 105, 104, 5, 3, 9, 1, 7, 2, 5, 6, 7, 1, 2, -207, -203, -206];
+    let mut tab = vec![
+        101, 105, 104, 5, 3, 9, 1, 7, 2, 5, 6, 7, 1, 2, -207, -203, -206,
+    ];
     qsort_aux(&mut tab, 3, 14);
     assert_sorted(&tab[3..14]);
 }
@@ -144,7 +144,18 @@ fn test_qsort_aux() {
 #[test]
 fn test_qsort() {
     let mut tab1 = vec![1, 3, 8, 1, 7, 9, 3, 8, 5, 7, 1];
-    let mut tab2 = vec![1<<50, 6<<50, 4<<50, 7<<50, 2<<50, 8<<50, 3<<50, 9<<50, 1<<50, 4<<50];
+    let mut tab2 = vec![
+        1 << 50,
+        6 << 50,
+        4 << 50,
+        7 << 50,
+        2 << 50,
+        8 << 50,
+        3 << 50,
+        9 << 50,
+        1 << 50,
+        4 << 50,
+    ];
     let mut tab3 = vec![22, -116, 12, 45286921, -4444, 852, -6369, 981516];
     qsort(&mut tab1);
     qsort(&mut tab2);
